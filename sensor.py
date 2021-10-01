@@ -187,7 +187,7 @@ class EDL21:
         """Connect to an EDL21 reader."""
         await self._proto.connect(self._hass.loop)
         if self._timeout > 0:
-            _LOGGER.info(f"Timeout set to {CONF_TIMEOUT}.")
+            _LOGGER.info(f"Timeout set to {self._timeout}ms.")
             asyncio.create_task(self.restart_after_not_getting_data(self._timeout))
         else:
             _LOGGER.info("Timeout set to 0. Message timeout control turned off.")
