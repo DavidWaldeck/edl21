@@ -173,7 +173,7 @@ class EDL21:
                     self._time_last_data_received + reconnect_timeout / 1000
                     < time.time()
                 ):
-                    _LOGGER.error(
+                    _LOGGER.warning(
                         f"No message after timeout of {reconnect_timeout} ms."
                     )
                     _LOGGER.info("Trying to reconnect...")
