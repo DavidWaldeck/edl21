@@ -177,9 +177,16 @@ class EDL21:
                         f"No message after timeout of {reconnect_timeout} ms."
                     )
                     _LOGGER.info("Trying to reconnect...")
-                    asyncio.ensure_future(
-                        self._proto._reconnect(), loop=self._hass.loop
-                    )
+                    try:
+                        asyncio.ensure_future(
+                            self._proto._reconnect(), loop=self._hass.loop
+                        )
+                    except OSError:
+                        _LOGGER.error(
+                            f"Reconnect failed. Waiting for {reconnect_timeout}ms."
+                        )
+                        await asyncio.sleep(reconnect_timeout / 1000)
+                        continue
                     self._time_last_data_received = None
                 await asyncio.sleep(1)
 
@@ -188,7 +195,9 @@ class EDL21:
         await self._proto.connect(self._hass.loop)
         if self._timeout > 0:
             _LOGGER.info(f"Timeout set to {self._timeout}ms.")
-            self._hass.loop.create_task(self.restart_after_not_getting_data(self._timeout))
+            self._hass.loop.create_task(
+                self.restart_after_not_getting_data(self._timeout)
+            )
         else:
             _LOGGER.info("Timeout set to 0. Message timeout control turned off.")
 
