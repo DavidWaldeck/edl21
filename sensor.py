@@ -187,7 +187,7 @@ class EDL21:
                         )
                         await asyncio.sleep(reconnect_timeout / 1000)
                         continue
-                    self._time_last_data_received = None
+                    self._time_last_data_received = time.time()
                 await asyncio.sleep(1)
 
     async def connect(self):
